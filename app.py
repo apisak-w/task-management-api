@@ -40,6 +40,17 @@ class TaskActionLogs(db.Model):
 
 db.create_all()
 
+def create_action_log(task_id, field, old_value, new_value, created_by):
+    if str(old_value) != str(new_value):
+        new_action_log = TaskActionLogs(
+            task_id=task_id,
+            field=field,
+            old_value=str(old_value),
+            new_value=str(new_value),
+            created_by=created_by
+        )
+        db.session.add(new_action_log)
+
 @app.route('/tasks', methods=['POST'])
 def create_task():
     data = request.get_json()
@@ -105,15 +116,33 @@ def get_task(task_id):
 
 @app.route('/tasks/<int:task_id>', methods=['PUT'])
 def update_task(task_id):
-    task = Task.query.get_or_404(task_id)
-    data = request.get_json()
+    current_task_data = Task.query.get_or_404(task_id)
+    request_body = request.get_json()
+    
+    if 'updated_by' not in request_body:
+        return jsonify({'message': 'Missing updated_by parameter'}), 400
 
-    task.title = data['title']
-    task.description = data.get('description', task.description)
-    task.due_date = datetime.strptime(data['due_date'], '%Y-%m-%d')
-    task.status = data['status']
-    task.updated_by = data['updated_by']
-    task.updated_at = datetime.utcnow()
+    if 'title' in request_body:
+        create_action_log(task_id, 'title', current_task_data.title, request_body['title'], request_body['updated_by'])
+        current_task_data.title = request_body['title']
+    
+    if 'description' in request_body:
+        create_action_log(task_id, 'title', current_task_data.description, request_body.get('description', current_task_data.description), request_body['updated_by'])
+        current_task_data.description = request_body.get('description', current_task_data.description)
+        
+    if 'due_date' in request_body:
+        create_action_log(task_id, 'due_date', current_task_data.due_date.strftime('%Y-%m-%d'), request_body['due_date'], request_body['updated_by'])
+        current_task_data.due_date = datetime.strptime(request_body['due_date'], '%Y-%m-%d')
+    
+    if 'status' in request_body:
+        create_action_log(task_id, 'status', current_task_data.status, request_body['status'], request_body['updated_by'])
+        current_task_data.status = request_body['status']
+    
+    if 'updated_by' in request_body:
+        create_action_log(task_id, 'updated_by', current_task_data.updated_by, request_body['updated_by'], request_body['updated_by'])
+        current_task_data.updated_by = request_body['updated_by']
+
+    current_task_data.updated_at = datetime.utcnow()
 
     db.session.commit()
     return jsonify({'message': 'Task updated successfully'})
