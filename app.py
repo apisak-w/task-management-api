@@ -1,9 +1,13 @@
+import os
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+base_dir = os.path.abspath(os.path.dirname(__file__))
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
+app.app_context().push()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(base_dir, 'tasks.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -17,9 +21,12 @@ class Task(db.Model):
     updated_by = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_deleted = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"Task('{self.title}', '{self.description}', '{self.due_date}', '{self.status}', '{self.created_by}', '{self.updated_by}')"
+        return f"Task('{self.title}', '{self.description}', '{self.due_date}', '{self.status}', '{self.created_by}', '{self.updated_by}', '{self.is_deleted}')"
+
+db.create_all()
 
 @app.route('/tasks', methods=['POST'])
 def create_task():
@@ -61,7 +68,8 @@ def get_tasks():
             'created_by': task.created_by,
             'updated_by': task.updated_by,
             'created_at': task.created_at.strftime('%Y-%m-%d %H:%M:%S'),
-            'updated_at': task.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+            'updated_at': task.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'is_deleted': task.is_deleted
         }
         for task in tasks
     ]
@@ -106,5 +114,4 @@ def delete_task(task_id):
     return jsonify({'message': 'Task deleted successfully'})
 
 if __name__ == '__main__':
-    db.create_all()
     app.run(debug=True)
