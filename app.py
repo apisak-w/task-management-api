@@ -73,6 +73,8 @@ def get_tasks():
     created_by = request.args.get('created_by')
     
     query = Task.query
+    query = query.filter(Task.is_deleted == False)
+    
     if due_date:
         query = query.filter(Task.due_date == datetime.strptime(due_date, '%Y-%m-%d'))
     if status:
@@ -149,8 +151,10 @@ def update_task(task_id):
 
 @app.route('/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
-    task = Task.query.get_or_404(task_id)
-    db.session.delete(task)
+    current_task_data = Task.query.get_or_404(task_id)
+    
+    current_task_data.is_deleted = True
+    
     db.session.commit()
     return jsonify({'message': 'Task deleted successfully'})
 
