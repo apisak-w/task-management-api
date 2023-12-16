@@ -2,6 +2,8 @@ import os
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from marshmallow import ValidationError
+from schemas.task import CreateTaskSchema, UndoTaskActionSchema, UpdateTaskSchema
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -54,6 +56,15 @@ def create_action_log(task_id, field, old_value, new_value, created_by):
 @app.route('/tasks', methods=['POST'])
 def create_task():
     data = request.get_json()
+    schema = CreateTaskSchema()
+    
+    try:
+        # Validate request body against schema data types
+        result = schema.load(data)
+    except ValidationError as err:
+        # Return a nice message if validation fails
+        return jsonify(err.messages), 400
+    
     new_task = Task(
         title=data['title'],
         description=data.get('description', ''),
@@ -118,11 +129,17 @@ def get_task(task_id):
 
 @app.route('/tasks/<int:task_id>', methods=['PUT'])
 def update_task(task_id):
-    current_task_data = Task.query.get_or_404(task_id)
     request_body = request.get_json()
+    schema = UpdateTaskSchema()
     
-    if 'updated_by' not in request_body:
-        return jsonify({'message': 'Missing updated_by parameter'}), 400
+    try:
+        # Validate request body against schema data types
+        result = schema.load(request_body)
+    except ValidationError as err:
+        # Return a nice message if validation fails
+        return jsonify(err.messages), 400
+    
+    current_task_data = Task.query.get_or_404(task_id)
 
     if 'title' in request_body:
         create_action_log(task_id, 'title', current_task_data.title, request_body['title'], request_body['updated_by'])
@@ -152,6 +169,15 @@ def update_task(task_id):
 @app.route('/tasks/<int:task_id>/undo', methods=['POST'])
 def undo_task_action(task_id):
     request_body = request.get_json()
+    schema = UndoTaskActionSchema()
+    
+    try:
+        # Validate request body against schema data types
+        result = schema.load(request_body)
+    except ValidationError as err:
+        # Return a nice message if validation fails
+        return jsonify(err.messages), 400
+    
     current_task_data = Task.query.get_or_404(task_id)
     previous_field_value = TaskActionLogs.query.filter_by(
         task_id=task_id,
