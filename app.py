@@ -149,6 +149,32 @@ def update_task(task_id):
     db.session.commit()
     return jsonify({'message': 'Task updated successfully'})
 
+@app.route('/tasks/<int:task_id>/undo', methods=['POST'])
+def undo_task_action(task_id):
+    request_body = request.get_json()
+    current_task_data = Task.query.get_or_404(task_id)
+    previous_field_value = TaskActionLogs.query.filter_by(
+        task_id=task_id,
+        field=request_body['field']
+    ).order_by(TaskActionLogs.id.desc()).first()
+    
+    if previous_field_value:
+        if previous_field_value.field == 'title':
+            current_task_data.title = previous_field_value.old_value
+        if previous_field_value.field == 'description':
+            current_task_data.description = previous_field_value.old_value
+        if previous_field_value.field == 'due_date':
+            current_task_data.due_date = datetime.strptime(previous_field_value.old_value, '%Y-%m-%d')
+        if previous_field_value.field == 'status':
+            current_task_data.status = previous_field_value.old_value
+        if previous_field_value.field == 'updated_by':
+            current_task_data.updated_by = previous_field_value.old_value
+        
+        db.session.delete(previous_field_value)
+        db.session.commit()
+    
+    return jsonify({'message': 'Task undid successfully'})
+
 @app.route('/tasks/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     current_task_data = Task.query.get_or_404(task_id)
