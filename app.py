@@ -26,6 +26,18 @@ class Task(db.Model):
     def __repr__(self):
         return f"Task('{self.title}', '{self.description}', '{self.due_date}', '{self.status}', '{self.created_by}', '{self.updated_by}', '{self.is_deleted}')"
 
+class TaskActionLogs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
+    field = db.Column(db.String(50), nullable=False)
+    old_value = db.Column(db.String(255), nullable=False)
+    new_value = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_by = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        return f"TaskActionLogs('{self.task_id}', '{self.field}', '{self.old_value}', '{self.new_value}', '{self.created_by}')"
+
 db.create_all()
 
 @app.route('/tasks', methods=['POST'])
