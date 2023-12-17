@@ -1,13 +1,19 @@
-from config import Config
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, request, jsonify
+from flask import Flask
+
 from app.extensions import db
+from app.models.task import *
+from app.models.task_action_logs import *
+
+from config import Config
 
 def create_app(config_class=Config):
   app = Flask(__name__)
   app.config.from_object(config_class)
+  app.app_context().push()
   
   db.init_app(app)
+  
+  db.create_all()
   
   from app.task import bp as tasks_bp
   app.register_blueprint(tasks_bp, url_prefix='/tasks')
