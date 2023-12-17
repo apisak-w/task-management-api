@@ -1,6 +1,6 @@
 from flask import Flask
 
-from app.extensions import db
+from app.extensions import init_extensions
 from app.models.task import *
 from app.models.task_action_logs import *
 
@@ -11,7 +11,7 @@ def create_app(config_class=Config):
   app.config.from_object(config_class)
   app.app_context().push()
   
-  db.init_app(app)
+  init_extensions(app)
   
   db.create_all()
   
