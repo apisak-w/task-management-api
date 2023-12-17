@@ -4,8 +4,7 @@ from app.constants.task_status import TaskStatusConstant
 
 ACCEPTED_TASK_STATUS = [TaskStatusConstant.PENDING, TaskStatusConstant.IN_PROGRESS, TaskStatusConstant.COMPLETED]
 
-
-class CreateTaskSchema(Schema):
+class CreateTaskFormSchema(Schema):
   title = fields.String(required=True)
   description = fields.String(required=True)
   due_date = fields.Date(required=True)
@@ -13,7 +12,7 @@ class CreateTaskSchema(Schema):
   created_by = fields.String(required=True)
   updated_by = fields.String(required=True)
   
-class UpdateTaskSchema(Schema):
+class UpdateTaskFormSchema(Schema):
   title = fields.String()
   description = fields.String()
   due_date = fields.Date()
@@ -21,5 +20,13 @@ class UpdateTaskSchema(Schema):
   created_by = fields.String()
   updated_by = fields.String(required=True)
 
-class UndoTaskActionSchema(Schema):
+class UndoTaskActionFormSchema(Schema):
   field = fields.String(required=True)
+
+class GetTaskPathSchema(Schema):
+  task_id = fields.Int(required=True)
+  
+class GetTasksQuerySchema(Schema):
+  due_date = fields.Date()
+  status = fields.Str(validate=OneOf(ACCEPTED_TASK_STATUS))
+  created_by = fields.String()

@@ -1,19 +1,23 @@
 from flask import request, jsonify
 from marshmallow import ValidationError
-from datetime import datetime
+from flasgger import Swagger, swag_from, Schema
+from flasgger_marshmallow import swagger_decorator
 
 from app.models.task import Task
-from app.models.task_action_logs import TaskActionLogs
-
-from app.schemas.task import CreateTaskSchema, UndoTaskActionSchema, UpdateTaskSchema
+from app.schemas.task import CreateTaskFormSchema, GetTaskPathSchema, GetTasksQuerySchema, UndoTaskActionFormSchema, UpdateTaskFormSchema
 
 from app.task import bp
-from app.extensions import db
 
+SWAGGER_DECORATOR_OPTIONS = {
+    'tags': ['Task']
+}
+
+
+@swagger_decorator(form_schema=CreateTaskFormSchema, tags=SWAGGER_DECORATOR_OPTIONS['tags'])
 @bp.route('', methods=['POST'])
 def create_task():
     data = request.get_json()
-    schema = CreateTaskSchema()
+    schema = CreateTaskFormSchema()
     
     try:
         # Validate request body against schema data types
@@ -26,6 +30,7 @@ def create_task():
     
     return jsonify({'message': 'Task created successfully'}), 201
 
+@swagger_decorator(query_schema=GetTasksQuerySchema, tags=SWAGGER_DECORATOR_OPTIONS['tags'])
 @bp.route('', methods=['GET'])
 def get_tasks():
     due_date = request.args.get('due_date')
@@ -34,17 +39,19 @@ def get_tasks():
     
     tasks_list = Task.get_tasks(due_date, status, created_by)
     
-    return jsonify({'tasks': tasks_list})
+    return jsonify(tasks_list)
 
+@swagger_decorator(path_schema=GetTaskPathSchema, tags=SWAGGER_DECORATOR_OPTIONS['tags'])
 @bp.route('/<int:task_id>', methods=['GET'])
 def get_task(task_id):
     task_data = Task.get_task(task_id)
-    return jsonify({'task': task_data})
+    return jsonify(task_data)
 
+@swagger_decorator(form_schema=UpdateTaskFormSchema, tags=SWAGGER_DECORATOR_OPTIONS['tags'])
 @bp.route('/<int:task_id>', methods=['PUT'])
 def update_task(task_id):
     request_body = request.get_json()
-    schema = UpdateTaskSchema()
+    schema = UpdateTaskFormSchema()
     
     try:
         # Validate request body against schema data types
@@ -57,10 +64,11 @@ def update_task(task_id):
     
     return jsonify({'message': 'Task updated successfully'})
 
+@swagger_decorator(form_schema=UndoTaskActionFormSchema, tags=SWAGGER_DECORATOR_OPTIONS['tags'])
 @bp.route('/<int:task_id>/undo', methods=['POST'])
 def undo_task_action(task_id):
     request_body = request.get_json()
-    schema = UndoTaskActionSchema()
+    schema = UndoTaskActionFormSchema()
     
     try:
         # Validate request body against schema data types
@@ -73,6 +81,7 @@ def undo_task_action(task_id):
     
     return jsonify({'message': 'Task undid successfully'})
 
+@swagger_decorator(tags=SWAGGER_DECORATOR_OPTIONS['tags'])
 @bp.route('/<int:task_id>', methods=['DELETE'])
 def delete_task(task_id):
     Task.delete_task(task_id)
