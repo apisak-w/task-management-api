@@ -1,0 +1,82 @@
+[
+    {
+        "title": "Update Website Content",
+        "description": "Ensure all website content is up-to-date and accurate.",
+        "due_date": "2023-09-01",
+        "status": "Pending",
+        "created_by": "David Smith",
+        "updated_by": "David Smith"
+    },
+    {
+        "title": "Client Meeting Preparation",
+        "description": "Prepare presentation materials for the upcoming client meeting.",
+        "due_date": "2023-08-20",
+        "status": "In-Progress",
+        "created_by": "Emily Rodriguez",
+        "updated_by": "Emily Rodriguez"
+    },
+    {
+        "title": "Bug Fixing",
+        "description": "Identify and fix bugs reported by users in the latest release.",
+        "due_date": "2023-08-25",
+        "status": "Pending",
+        "created_by": "Michael Chen",
+        "updated_by": "Michael Chen"
+    },
+    {
+        "title": "Team Building Event Planning",
+        "description": "Coordinate logistics for the upcoming team-building event.",
+        "due_date": "2023-09-10",
+        "status": "Completed",
+        "created_by": "Sophia Lee",
+        "updated_by": "Sophia Lee"
+    },
+    {
+        "title": "Marketing Campaign Launch",
+        "description": "Launch the new marketing campaign across various platforms.",
+        "due_date": "2023-08-30",
+        "status": "In-Progress",
+        "created_by": "Alex Turner",
+        "updated_by": "Alex Turner"
+    },
+    {
+        "title": "Budget Review",
+        "description": "Conduct a thorough review of the department's budget for the next quarter.",
+        "due_date": "2023-09-05",
+        "status": "Completed",
+        "created_by": "Emma Davis",
+        "updated_by": "Emma Davis"
+    },
+    {
+        "title": "Employee Training Session",
+        "description": "Organize and conduct a training session for new employees.",
+        "due_date": "2023-08-22",
+        "status": "Pending",
+        "created_by": "Daniel White",
+        "updated_by": "Daniel White"
+    },
+    {
+        "title": "Product Launch Planning",
+        "description": "Plan and coordinate the launch of the new product line.",
+        "due_date": "2023-09-15",
+        "status": "Completed",
+        "created_by": "Olivia Taylor",
+        "updated_by": "Olivia Taylor"
+    },
+    {
+        "title": "Monthly Report Generation",
+        "description": "Generate and compile monthly reports for management review.",
+        "due_date": "2023-08-28",
+        "status": "In-Progress",
+        "created_by": "Noah Johnson",
+        "updated_by": "Noah Johnson"
+    },
+    {
+        "title": "Customer Feedback Analysis",
+        "description": "Analyze and summarize customer feedback received in the past month.",
+        "due_date": "2023-09-08",
+        "status": "Pending",
+        "created_by": "Ava Miller",
+        "updated_by": "Ava Miller"
+    }
+]
