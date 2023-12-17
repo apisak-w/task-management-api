@@ -16,10 +16,12 @@ This repository contains the design and implementation of an API for a Task Mana
 - Python
 - Visual Studio Code with [this extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) installed.
 
-## Running this project
-- Start the Docker engine
-- Clone this repository
-- Open this repository in VSCode
-- Open the project in Dev Container by following the picture below
-![Dec-17-2023 17-54-41](https://github.com/apisak-w/task-management-api/assets/26784541/8cb836e0-7306-441c-b221-7971a412355a)
-- If the project run successfully, visit http://127.0.0.1:5000/apidocs/
+## Running this Project
+1. Start the Docker engine.
+2. Clone this repository.
+3. Open this repository in VSCode.
+4. Open the project in the Dev Container by following the image below:
+   
+   ![Dev Container](https://github.com/apisak-w/task-management-api/assets/26784541/8cb836e0-7306-441c-b221-7971a412355a)
+
+5. If the project runs successfully, visit [http://127.0.0.1:5000/apidocs/](http://127.0.0.1:5000/apidocs/) to access the API documentation.
