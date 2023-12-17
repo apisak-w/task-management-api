@@ -1,7 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from app.extensions import db
 
+# Decided to use Audit Table style (https://dev.to/zhiyueyi/design-a-table-to-keep-historical-changes-in-database-10fn)
+# to keep track of changes in every fields of tasks,
+# but tradeoff in terms of database size as the amount of records will be increased with every changes.
 class TaskActionLogs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
