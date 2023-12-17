@@ -20,5 +20,6 @@ This repository contains the design and implementation of an API for a Task Mana
 - Start the Docker engine
 - Clone this repository
 - Open this repository in VSCode
-- Open devcontainer by following this
+- Open the project in Dev Container by following the picture below
 ![Dec-17-2023 17-54-41](https://github.com/apisak-w/task-management-api/assets/26784541/8cb836e0-7306-441c-b221-7971a412355a)
+- If the project run successfully, visit http://127.0.0.1:5000/apidocs/
