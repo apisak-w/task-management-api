@@ -17,7 +17,7 @@ class UpdateTaskSchema(Schema):
   title = fields.String()
   description = fields.String()
   due_date = fields.Date()
-  status = fields.Str(validate=OneOf(ACCEPTED_TASK_STATUS), required=True)
+  status = fields.Str(validate=OneOf(ACCEPTED_TASK_STATUS))
   created_by = fields.String()
   updated_by = fields.String(required=True)
 
